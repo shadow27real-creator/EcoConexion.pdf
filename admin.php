@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_publicacion'
     }
 }
 
-// Paginación y Buscador para escalar a miles de registros
+// Moderación escalable con paginación y búsqueda
 $busqueda = trim($_GET['q'] ?? '');
 $pagina = max(1, (int)($_GET['p'] ?? 1));
 $porPagina = 10;
@@ -65,7 +65,7 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <h2>Panel de Control Administrativo</h2>
-<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Gestión optimizada y moderación escalable de contenidos.</p>
+<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Gestión general de usuarios y moderación de ofertas.</p>
 
 <?php if (isset($_SESSION['mensaje_exito'])): ?>
     <div class="alerta alerta-exito"><?= e($_SESSION['mensaje_exito']) ?></div>
@@ -84,7 +84,7 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-    <h3>Listado General y Moderación</h3>
+    <h3>Listado de Publicaciones</h3>
     <form action="admin.php" method="GET" style="display: flex; gap: 0.5rem;">
         <input type="text" name="q" value="<?= e($busqueda) ?>" placeholder="Buscar por título o autor..." style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; width: 240px;">
         <button type="submit" class="btn" style="width: auto; padding: 0.5rem 1rem;">Buscar</button>
@@ -130,7 +130,6 @@ require_once __DIR__ . '/includes/header.php';
         </table>
     </div>
 
-    <!-- Paginación -->
     <?php if ($totalPaginas > 1): ?>
         <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.5rem;">
             <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>

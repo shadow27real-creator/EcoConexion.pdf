@@ -50,10 +50,10 @@ require_once __DIR__ . '/includes/header.php';
     <form action="publicar.php" method="POST">
         <div class="campo">
             <label for="titulo">Título de la Publicación:</label>
-            <input type="text" id="titulo" name="titulo" value="<?= e($_POST['titulo'] ?? '') ?>" placeholder="Ej: Cartón limpio doblado y preparado" required>
+            <input type="text" id="titulo" name="titulo" value="<?= e($_POST['titulo'] ?? '') ?>" placeholder="Ej: Cartón limpio doblado" required>
         </div>
         <div class="campo">
-            <label for="id_material">Categoría de Material:</label>
+            <label for="id_material">Categoría:</label>
             <select id="id_material" name="id_material" required>
                 <option value="">-- Seleccionar --</option>
                 <?php foreach ($categorias as $cat): ?>
@@ -81,7 +81,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
         <div class="campo">
             <label for="descripcion">Notas Adicionales (Opcional):</label>
-            <textarea id="descripcion" name="descripcion" rows="3" placeholder="Detalles de disponibilidad horaria o de acceso..."></textarea>
+            <textarea id="descripcion" name="descripcion" rows="3" placeholder="Detalles de disponibilidad u horario..."></textarea>
         </div>
         <button type="submit" class="btn">Publicar Oferta</button>
     </form>

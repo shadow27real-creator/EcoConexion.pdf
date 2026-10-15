@@ -30,7 +30,7 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <h2>Mis Ofertas de Reciclaje</h2>
-<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Gestione el estado de sus publicaciones (las recogidas se eliminarán automáticamente tras 6 horas)</p>
+<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Gestione sus ofertas (las marcadas como recogidas desaparecen a las 6 horas)</p>
 
 <?php if (count($misPubs) > 0): ?>
     <div class="grid-publicaciones">
@@ -57,7 +57,7 @@ require_once __DIR__ . '/includes/header.php';
         <?php endforeach; ?>
     </div>
 <?php else: ?>
-    <div class="card"><p>No ha publicado ofertas aún. <a href="publicar.php" style="color: var(--primary);">Crear una nueva oferta</a>.</p></div>
+    <div class="card"><p>No ha publicado ofertas aún. <a href="publicar.php" style="color: var(--primary);">Crear una oferta</a>.</p></div>
 <?php endif; ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

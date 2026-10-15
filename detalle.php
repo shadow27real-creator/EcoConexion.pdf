@@ -25,7 +25,6 @@ $telLimpio = limpiarTelefono($pub['telefono']);
 $mensajeWs = urlencode("Hola " . $pub['generador'] . ", vi tu oferta de '" . $pub['titulo'] . "' en EcoConexión y deseo acordar el retiro del material.");
 $urlWhatsapp = "https://api.whatsapp.com/send?phone=" . $telLimpio . "&text=" . $mensajeWs;
 
-// Consulta formateada para el mapa de Google Maps
 $queryMapa = urlencode($pub['direccion'] . ', ' . $pub['barrio'] . ', ' . $pub['ciudad']);
 
 $tituloPagina = $pub['titulo'];
@@ -35,16 +34,16 @@ require_once __DIR__ . '/includes/header.php';
 <div class="card card-center" style="max-width: 700px;">
     <span class="badge"><?= e($pub['material']) ?></span>
     <h2 style="color: var(--primary); margin: 0.6rem 0;"><?= e($pub['titulo']) ?></h2>
-    <p style="font-size: 0.9rem;"><strong>Estado de disponibilidad:</strong> <?= strtoupper(e($pub['estado'])) ?></p>
+    <p style="font-size: 0.9rem;"><strong>Estado:</strong> <?= strtoupper(e($pub['estado'])) ?></p>
     <hr style="margin: 1rem 0; border: 0; border-top: 1px solid var(--border);">
 
     <p><strong>Ofrecido por:</strong> <?= e($pub['generador']) ?></p>
-    <p><strong>Cantidad informada:</strong> <?= e($pub['cantidad']) ?></p>
+    <p><strong>Cantidad:</strong> <?= e($pub['cantidad']) ?></p>
     <p><strong>Ubicación:</strong> <?= e($pub['barrio']) ?>, <?= e($pub['ciudad']) ?></p>
     <p><strong>Dirección Exacta:</strong> <?= e($pub['direccion']) ?></p>
     <br>
 
-    <!-- REQUISITO: Mapa interactivo de Google Maps -->
+    <!-- Mapa Interactivo Integrado de Google Maps -->
     <div style="margin-bottom: 1.5rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
         <iframe 
             width="100%" 
@@ -56,7 +55,7 @@ require_once __DIR__ . '/includes/header.php';
         </iframe>
     </div>
 
-    <p><strong>Descripción:</strong></p>
+    <p><strong>Notas Adicionales:</strong></p>
     <p style="color: var(--text-muted);"><?= !empty($pub['descripcion']) ? nl2br(e($pub['descripcion'])) : 'Sin especificaciones adicionales.' ?></p>
     <br>
 

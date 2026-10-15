@@ -5,12 +5,12 @@ require_once __DIR__ . '/funciones/funciones.php';
 
 exigirAutenticacion();
 
-// REQUISITO: Ocultar automáticamente las publicaciones marcadas como "recogido" tras 6 horas
+// Ocultar/eliminar automáticamente publicaciones recogidas pasadas 6 horas
 $mysqli->query('DELETE FROM publicaciones WHERE estado = "recogido" AND fecha_actualizacion < (NOW() - INTERVAL 6 HOUR)');
 
 $filtroMat = (int)($_GET['material'] ?? 0);
 $filtroCiudad = trim($_GET['ciudad'] ?? '');
-$filtroBarrio = trim($_GET['barrio'] ?? '');
+$filtroTexto = trim($_GET['q'] ?? '');
 
 $resMat = $mysqli->query('SELECT id_material, nombre FROM materiales ORDER BY nombre ASC');
 $categorias = $resMat->fetch_all(MYSQLI_ASSOC);
@@ -36,10 +36,13 @@ if (!empty($filtroCiudad)) {
     $params[] = $filtroCiudad;
     $types .= 's';
 }
-if (!empty($filtroBarrio)) {
-    $sql .= ' AND p.barrio LIKE ?';
-    $params[] = '%' . $filtroBarrio . '%';
-    $types .= 's';
+if (!empty($filtroTexto)) {
+    $sql .= ' AND (p.titulo LIKE ? OR p.barrio LIKE ? OR p.direccion LIKE ?)';
+    $like = '%' . $filtroTexto . '%';
+    $params[] = $like;
+    $params[] = $like;
+    $params[] = $like;
+    $types .= 'sss';
 }
 
 $sql .= ' ORDER BY p.fecha_publicacion DESC';
@@ -58,59 +61,75 @@ $clasePagina = 'app-bg';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<h2>Materiales Disponibles para Reciclaje</h2>
-<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Filtra los residuos por categoría, ciudad y barrio.</p>
+<h2 style="color: var(--primary); font-weight: 800; margin-bottom: 0.3rem;">Tablero de Materiales Reciclables</h2>
+<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Filtra rápidamente por categoría, ciudad o barrio.</p>
 
-<form action="tablero.php" method="GET" class="filtros-box">
-    <div class="campo">
-        <label for="material">Categoría:</label>
-        <select id="material" name="material">
-            <option value="0">Todos los materiales</option>
-            <?php foreach ($categorias as $cat): ?>
-                <option value="<?= $cat['id_material'] ?>" <?= $filtroMat === (int)$cat['id_material'] ? 'selected' : '' ?>>
-                    <?= e($cat['nombre']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+<div class="filter-dashboard">
+    <div class="filter-dashboard-header">🔍 Categorías de Material:</div>
+
+    <div class="chips-container">
+        <a href="tablero.php?material=0&ciudad=<?= urlencode($filtroCiudad) ?>&q=<?= urlencode($filtroTexto) ?>" 
+           class="chip <?= $filtroMat === 0 ? 'active' : '' ?>">
+           Todos
+        </a>
+        <?php foreach ($categorias as $cat): ?>
+            <a href="tablero.php?material=<?= $cat['id_material'] ?>&ciudad=<?= urlencode($filtroCiudad) ?>&q=<?= urlencode($filtroTexto) ?>" 
+               class="chip <?= $filtroMat === (int)$cat['id_material'] ? 'active' : '' ?>">
+               <?= e($cat['nombre']) ?>
+            </a>
+        <?php endforeach; ?>
     </div>
-    <div class="campo">
-        <label for="ciudad">Ciudad:</label>
-        <select id="ciudad" name="ciudad">
-            <option value="">Todas las ciudades</option>
-            <?php foreach ($ciudades as $c): ?>
-                <option value="<?= e($c['ciudad']) ?>" <?= $filtroCiudad === $c['ciudad'] ? 'selected' : '' ?>>
-                    <?= e($c['ciudad']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-    <div class="campo">
-        <label for="barrio">Barrio:</label>
-        <input type="text" id="barrio" name="barrio" value="<?= e($filtroBarrio) ?>" placeholder="Ej: Centro, El Prado...">
-    </div>
-    <div class="campo" style="flex: 0; min-width: auto;">
-        <button type="submit" class="btn" style="padding: 0.65rem 1.2rem;">Filtrar</button>
-    </div>
-</form>
+
+    <form action="tablero.php" method="GET" class="filter-inputs-grid">
+        <input type="hidden" name="material" value="<?= $filtroMat ?>">
+        
+        <div class="campo">
+            <label for="ciudad">Filtrar por Ciudad:</label>
+            <select id="ciudad" name="ciudad">
+                <option value="">Todas las Ciudades</option>
+                <?php foreach ($ciudades as $c): ?>
+                    <option value="<?= e($c['ciudad']) ?>" <?= $filtroCiudad === $c['ciudad'] ? 'selected' : '' ?>>
+                        <?= e($c['ciudad']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="q">Barrio o Descripción:</label>
+            <input type="text" id="q" name="q" value="<?= e($filtroTexto) ?>" placeholder="Ej: Chapinero, Centro, Cartón...">
+        </div>
+
+        <div class="campo" style="flex: 0;">
+            <button type="submit" class="btn" style="padding: 0.65rem 1.5rem;">Buscar</button>
+        </div>
+    </form>
+</div>
 
 <?php if (count($publicaciones) > 0): ?>
     <div class="grid-publicaciones">
         <?php foreach ($publicaciones as $pub): ?>
             <div class="pub-card">
                 <div>
-                    <span class="badge"><?= e($pub['material']) ?></span>
-                    <h3 style="margin: 0.6rem 0; color: var(--primary);"><?= e($pub['titulo']) ?></h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span class="badge"><?= e($pub['material']) ?></span>
+                        <small style="color: var(--text-muted); font-size: 0.78rem;"><?= e(date('d/m/Y', strtotime($pub['fecha_publicacion']))) ?></small>
+                    </div>
+                    <h3 style="margin: 0.4rem 0 0.8rem 0; color: var(--primary); font-size: 1.15rem;"><?= e($pub['titulo']) ?></h3>
                     <p><strong>Cantidad:</strong> <?= e($pub['cantidad']) ?></p>
                     <p><strong>Ubicación:</strong> <?= e($pub['barrio']) ?>, <?= e($pub['ciudad']) ?></p>
                 </div>
                 <div style="margin-top: 1.2rem;">
-                    <a href="detalle.php?id=<?= $pub['id_publicacion'] ?>" class="btn">Ver Mapa y Detalles</a>
+                    <a href="detalle.php?id=<?= $pub['id_publicacion'] ?>" class="btn">Ver Mapa y Contacto</a>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
 <?php else: ?>
-    <div class="card"><p>No hay ofertas disponibles con los filtros seleccionados.</p></div>
+    <div class="card" style="text-align: center; padding: 3rem 1rem;">
+        <p style="font-size: 1.1rem; color: var(--text-muted);">No se encontraron ofertas con los filtros ingresados.</p>
+        <a href="tablero.php" style="color: var(--primary); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Limpiar filtros de búsqueda</a>
+    </div>
 <?php endif; ?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
