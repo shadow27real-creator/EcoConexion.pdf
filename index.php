@@ -2,25 +2,39 @@
 declare(strict_types=1);
 require_once __DIR__ . '/funciones/funciones.php';
 
-$tituloPagina = 'Conectamos residuos con quien los transforma';
+$tituloPagina = 'Innovación en Reciclaje Urbano';
 $clasePagina = 'app-bg';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="card" style="text-align: center; padding: 4rem 2rem;">
-    <h1 style="font-size: 2.4rem; color: var(--primary); margin-bottom: 1rem;">Conectamos residuos con quien los transforma</h1>
-    <p style="max-width: 600px; margin: 0 auto 2rem auto; color: var(--text-muted); font-size: 1.1rem;">
-        EcoConexión es la plataforma comunitaria que facilita la recolección selectiva de materiales reciclables entre generadores y recicladores.
+<div class="hero-section">
+    <h1 class="hero-title">Conectamos residuos con quien los transforma</h1>
+    <p class="hero-subtitle">
+        Plataforma tecnológica avanzada para la gestión inteligente de materiales reciclables, uniendo generadores, recicladores y administradores comunitarios.
     </p>
-    
     <?php if (estaAutenticado()): ?>
-        <a href="tablero.php" class="btn" style="max-width: 280px; margin: 0 auto;">Ir al Tablero de Materiales</a>
+        <a href="tablero.php" class="btn" style="max-width: 260px; margin: 0 auto; background: white; color: var(--primary);">Explorar Tablero</a>
     <?php else: ?>
         <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="auth/login.php" class="btn" style="max-width: 200px;">Iniciar Sesión</a>
-            <a href="auth/registro.php" class="btn btn-secundario" style="max-width: 200px;">Registrarse</a>
+            <a href="auth/login.php" class="btn" style="max-width: 180px; background: white; color: var(--primary);">Iniciar Sesión</a>
+            <a href="auth/registro.php" class="btn btn-secundario" style="max-width: 180px; background: rgba(255,255,255,0.2); border: 1px solid white;">Registrarse</a>
         </div>
     <?php endif; ?>
+</div>
+
+<div class="features-grid">
+    <div class="feature-card">
+        <h3>🌱 Para Generadores</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Publica tus materiales reciclables especificando cantidad, barrio y ciudad con geolocalización integrada para facilitar el retiro.</p>
+    </div>
+    <div class="feature-card">
+        <h3>♻️ Para Recicladores</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Filtra rápidamente las ofertas disponibles por ubicación y contacta de inmediato con los generadores a través de canales directos.</p>
+    </div>
+    <div class="feature-card">
+        <h3>🛡️ Control y Seguridad</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Moderación avanzada para administradores, control estricto de roles y autolimpieza de ofertas expiradas tras 6 horas de su recolección.</p>
+    </div>
 </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

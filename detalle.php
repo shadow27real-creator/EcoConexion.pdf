@@ -7,7 +7,7 @@ exigirAutenticacion();
 
 $id_pub = (int)($_GET['id'] ?? 0);
 
-$stmt = $mysqli->prepare('SELECT p.id_publicacion, p.titulo, p.cantidad, p.direccion, p.descripcion, p.estado, p.fecha_publicacion, m.nombre AS material, u.nombre AS generador, u.telefono 
+$stmt = $mysqli->prepare('SELECT p.id_publicacion, p.titulo, p.cantidad, p.direccion, p.barrio, p.ciudad, p.descripcion, p.estado, p.fecha_publicacion, m.nombre AS material, u.nombre AS generador, u.telefono 
                           FROM publicaciones p 
                           JOIN materiales m ON p.id_material = m.id_material 
                           JOIN usuarios u ON p.id_usuario = u.id_usuario 
@@ -25,11 +25,14 @@ $telLimpio = limpiarTelefono($pub['telefono']);
 $mensajeWs = urlencode("Hola " . $pub['generador'] . ", vi tu oferta de '" . $pub['titulo'] . "' en EcoConexión y deseo acordar el retiro del material.");
 $urlWhatsapp = "https://api.whatsapp.com/send?phone=" . $telLimpio . "&text=" . $mensajeWs;
 
+// Consulta formateada para el mapa de Google Maps
+$queryMapa = urlencode($pub['direccion'] . ', ' . $pub['barrio'] . ', ' . $pub['ciudad']);
+
 $tituloPagina = $pub['titulo'];
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="card card-center" style="max-width: 650px;">
+<div class="card card-center" style="max-width: 700px;">
     <span class="badge"><?= e($pub['material']) ?></span>
     <h2 style="color: var(--primary); margin: 0.6rem 0;"><?= e($pub['titulo']) ?></h2>
     <p style="font-size: 0.9rem;"><strong>Estado de disponibilidad:</strong> <?= strtoupper(e($pub['estado'])) ?></p>
@@ -37,8 +40,22 @@ require_once __DIR__ . '/includes/header.php';
 
     <p><strong>Ofrecido por:</strong> <?= e($pub['generador']) ?></p>
     <p><strong>Cantidad informada:</strong> <?= e($pub['cantidad']) ?></p>
-    <p><strong>Dirección de entrega:</strong> <?= e($pub['direccion']) ?></p>
+    <p><strong>Ubicación:</strong> <?= e($pub['barrio']) ?>, <?= e($pub['ciudad']) ?></p>
+    <p><strong>Dirección Exacta:</strong> <?= e($pub['direccion']) ?></p>
     <br>
+
+    <!-- REQUISITO: Mapa interactivo de Google Maps -->
+    <div style="margin-bottom: 1.5rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
+        <iframe 
+            width="100%" 
+            height="280" 
+            style="border:0;" 
+            loading="lazy" 
+            allowfullscreen 
+            src="https://maps.google.com/maps?q=<?= $queryMapa ?>&t=&z=15&ie=UTF8&iwloc=&output=embed">
+        </iframe>
+    </div>
+
     <p><strong>Descripción:</strong></p>
     <p style="color: var(--text-muted);"><?= !empty($pub['descripcion']) ? nl2br(e($pub['descripcion'])) : 'Sin especificaciones adicionales.' ?></p>
     <br>

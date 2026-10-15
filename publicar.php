@@ -11,25 +11,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
     $id_material = (int)($_POST['id_material'] ?? 0);
     $cantidad = trim($_POST['cantidad'] ?? '');
+    $ciudad = trim($_POST['ciudad'] ?? '');
+    $barrio = trim($_POST['barrio'] ?? '');
     $direccion = trim($_POST['direccion'] ?? '');
     $descripcion = trim($_POST['descripcion'] ?? '');
 
-    if (empty($titulo)) {
-        $errores[] = 'El título descriptivo es obligatorio.';
-    }
-    if ($id_material <= 0) {
-        $errores[] = 'Seleccione una categoría válida de la lista.';
-    }
-    if (empty($cantidad)) {
-        $errores[] = 'Debe especificar una cantidad válida.';
-    }
-    if (mb_strlen($direccion) < 5) {
-        $errores[] = 'La dirección debe tener un mínimo de 5 caracteres.';
-    }
+    if (empty($titulo)) $errores[] = 'El título descriptivo es obligatorio.';
+    if ($id_material <= 0) $errores[] = 'Seleccione una categoría válida.';
+    if (empty($cantidad)) $errores[] = 'Debe especificar una cantidad válida.';
+    if (empty($ciudad)) $errores[] = 'La ciudad es obligatoria.';
+    if (empty($barrio)) $errores[] = 'El barrio es obligatorio.';
+    if (mb_strlen($direccion) < 5) $errores[] = 'La dirección debe tener un mínimo de 5 caracteres.';
 
     if (count($errores) === 0) {
-        $stmt = $mysqli->prepare('INSERT INTO publicaciones (titulo, cantidad, direccion, descripcion, id_material, id_usuario) VALUES (?, ?, ?, ?, ?, ?)');
-        $stmt->bind_param('ssssii', $titulo, $cantidad, $direccion, $descripcion, $id_material, $_SESSION['usuario_id']);
+        $stmt = $mysqli->prepare('INSERT INTO publicaciones (titulo, cantidad, ciudad, barrio, direccion, descripcion, id_material, id_usuario, estado, fecha_actualizacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "disponible", NOW())');
+        $stmt->bind_param('ssssssii', $titulo, $cantidad, $ciudad, $barrio, $direccion, $descripcion, $id_material, $_SESSION['usuario_id']);
         $stmt->execute();
 
         header('Location: mis_publicaciones.php');
@@ -69,9 +65,19 @@ require_once __DIR__ . '/includes/header.php';
             <label for="cantidad">Cantidad Disponible:</label>
             <input type="text" id="cantidad" name="cantidad" value="<?= e($_POST['cantidad'] ?? '') ?>" placeholder="Ej: 10 kg / 3 cajas grandes" required>
         </div>
+        <div style="display: flex; gap: 1rem;">
+            <div class="campo" style="flex: 1;">
+                <label for="ciudad">Ciudad:</label>
+                <input type="text" id="ciudad" name="ciudad" value="<?= e($_POST['ciudad'] ?? '') ?>" placeholder="Ej: Bogotá" required>
+            </div>
+            <div class="campo" style="flex: 1;">
+                <label for="barrio">Barrio:</label>
+                <input type="text" id="barrio" name="barrio" value="<?= e($_POST['barrio'] ?? '') ?>" placeholder="Ej: Chapinero" required>
+            </div>
+        </div>
         <div class="campo">
-            <label for="direccion">Dirección de Recogida (Mínimo 5 caracteres):</label>
-            <input type="text" id="direccion" name="direccion" value="<?= e($_POST['direccion'] ?? '') ?>" placeholder="Ej: Carrera 15 # 45 - 10, Local 2" required minlength="5">
+            <label for="direccion">Dirección Exacta:</label>
+            <input type="text" id="direccion" name="direccion" value="<?= e($_POST['direccion'] ?? '') ?>" placeholder="Ej: Carrera 15 # 45 - 10" required minlength="5">
         </div>
         <div class="campo">
             <label for="descripcion">Notas Adicionales (Opcional):</label>
