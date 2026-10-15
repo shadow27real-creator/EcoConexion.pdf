@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $tituloPagina = 'Iniciar Sesión';
+$clasePagina = 'auth-page';
 require_once __DIR__ . '/../includes/header.php';
 ?>
 

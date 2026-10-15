@@ -3,7 +3,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/conexion/conexion.php';
 require_once __DIR__ . '/funciones/funciones.php';
 
-// Regla del Negocio: Solo el rol Generador puede crear publicaciones (PDF Sección 3 y 8)
 exigirRol(['generador']);
 
 $errores = [];
@@ -24,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($cantidad)) {
         $errores[] = 'Debe especificar una cantidad válida.';
     }
-    // Validación de Dirección (PDF Sección 7: Mínimo 5 caracteres)
     if (mb_strlen($direccion) < 5) {
         $errores[] = 'La dirección debe tener un mínimo de 5 caracteres.';
     }

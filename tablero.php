@@ -3,7 +3,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/conexion/conexion.php';
 require_once __DIR__ . '/funciones/funciones.php';
 
-// Exigir autenticación según el documento de alcance (PDF Sección 3 y 8)
 exigirAutenticacion();
 
 $filtroMat = (int)($_GET['material'] ?? 0);

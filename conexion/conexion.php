@@ -1,17 +1,15 @@
 <?php
 declare(strict_types=1);
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
 $host = 'localhost';
-$usuario = 'root';
+$user = 'root';
 $password = '';
-$baseDatos = 'ecoconexion';
+$database = 'ecoconexion';
 
-try {
-    $mysqli = new mysqli($host, $usuario, $password, $baseDatos);
-    $mysqli->set_charset('utf8mb4');
-} catch (mysqli_sql_exception $e) {
-    http_response_code(500);
-    exit('Error crítico de conexión a la base de datos EcoConexión.');
+$mysqli = new mysqli($host, $user, $password, $database);
+
+if ($mysqli->connect_error) {
+    die('Error de conexión a la base de datos: ' . $mysqli->connect_error);
 }
+
+$mysqli->set_charset('utf8mb4');

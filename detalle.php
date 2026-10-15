@@ -3,7 +3,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/conexion/conexion.php';
 require_once __DIR__ . '/funciones/funciones.php';
 
-// Exigir autenticación según el documento de alcance (PDF Sección 3 y 8)
 exigirAutenticacion();
 
 $id_pub = (int)($_GET['id'] ?? 0);
@@ -45,7 +44,6 @@ require_once __DIR__ . '/includes/header.php';
     <br>
 
     <?php if ($pub['estado'] === 'disponible'): ?>
-        <!-- Seguridad del enlace externo: rel="noopener noreferrer" -->
         <a href="<?= $urlWhatsapp ?>" target="_blank" rel="noopener noreferrer" class="btn btn-ws">
             Contactar por WhatsApp
         </a>

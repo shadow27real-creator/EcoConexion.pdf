@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = trim($_POST['telefono'] ?? '');
     $tipo_usuario = trim($_POST['tipo_usuario'] ?? '');
 
-    // Validaciones estrictas según PDF Sección 7
     if (mb_strlen($nombre) < 2 || mb_strlen($nombre) > 100) {
         $errores[] = 'El nombre debe tener entre 2 y 100 caracteres.';
     }
@@ -26,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = 'El teléfono debe contener únicamente números (entre 7 y 15 dígitos).';
     }
     
-    // Regla de Negocio: Validar únicamente roles permitidos (PDF Sección 7)
     $rolesPermitidos = ['generador', 'reciclador'];
     if (!in_array($tipo_usuario, $rolesPermitidos, true)) {
         $errores[] = 'El tipo de usuario seleccionado no es válido.';
@@ -53,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $tituloPagina = 'Registro de Usuario';
+$clasePagina = 'auth-page';
 require_once __DIR__ . '/../includes/header.php';
 ?>
 

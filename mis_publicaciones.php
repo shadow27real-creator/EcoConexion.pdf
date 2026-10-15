@@ -3,13 +3,11 @@ declare(strict_types=1);
 require_once __DIR__ . '/conexion/conexion.php';
 require_once __DIR__ . '/funciones/funciones.php';
 
-// Exclusivo para Generadores (PDF Sección 3)
 exigirRol(['generador']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['marcar_recogido'])) {
     $id_pub = (int)($_POST['id_publicacion'] ?? 0);
     
-    // Regla de Negocio: Validar estricta propiedad del registro (PDF Sección 8)
     $stmt = $mysqli->prepare('UPDATE publicaciones SET estado = "recogido" WHERE id_publicacion = ? AND id_usuario = ?');
     $stmt->bind_param('ii', $id_pub, $_SESSION['usuario_id']);
     $stmt->execute();

@@ -14,13 +14,17 @@ require_once __DIR__ . '/../funciones/funciones.php';
     <header class="main-header">
         <div class="header-container">
             <a href="/EcoConexion/index.php" class="logo">
-                <span class="logo-icon">🌱</span> EcoConexión
+                <img src="/EcoConexion/img/logo_pagina.png" alt="Logo EcoConexión" class="logo-img">
+                <span>EcoConexión</span>
             </a>
             <nav class="main-nav">
                 <a href="/EcoConexion/tablero.php">Tablero</a>
                 
                 <?php if (estaAutenticado()): ?>
-                    <!-- Solo el Generador ve Publicar y Mis Publicaciones (PDF Sección 3) -->
+                    <?php if (tieneRol(['administrador'])): ?>
+                        <a href="/EcoConexion/admin.php" style="color: #ffda6a; font-weight: 700;">Panel Admin</a>
+                    <?php endif; ?>
+
                     <?php if (tieneRol(['generador'])): ?>
                         <a href="/EcoConexion/publicar.php">Publicar</a>
                         <a href="/EcoConexion/mis_publicaciones.php">Mis Ofertas</a>
@@ -37,4 +41,4 @@ require_once __DIR__ . '/../funciones/funciones.php';
             </nav>
         </div>
     </header>
-    <main class="main-content">
+    <main class="main-content <?= $clasePagina ?? '' ?>">
