@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
-session_start();
 require_once __DIR__ . '/conexion/conexion.php';
 require_once __DIR__ . '/funciones/funciones.php';
 
+// Exigir autenticación según el documento de alcance (PDF Sección 3 y 8)
+exigirAutenticacion();
+
 $filtroMat = (int)($_GET['material'] ?? 0);
 
-// Cargar categorías para los botones
 $resMat = $mysqli->query('SELECT id_material, nombre FROM materiales ORDER BY nombre ASC');
 $categorias = $resMat->fetch_all(MYSQLI_ASSOC);
 
-// Consulta principal dinámica
 $sql = 'SELECT p.id_publicacion, p.titulo, p.cantidad, p.direccion, p.estado, p.fecha_publicacion, m.nombre AS material
         FROM publicaciones p
         JOIN materiales m ON p.id_material = m.id_material
@@ -29,61 +29,42 @@ if ($filtroMat > 0) {
 } else {
     $publicaciones = $mysqli->query($sql)->fetch_all(MYSQLI_ASSOC);
 }
-?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Tablero - EcoConexión</title>
-    <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-    <header>
-        <h1><a href="index.php">EcoConexión</a></h1>
-        <nav>
-            <a href="tablero.php">Tablero</a>
-            <?php if (estaAutenticado()): ?>
-                <a href="publicar.php">Publicar</a>
-                <a href="mis_publicaciones.php">Mis Publicaciones</a>
-                <a href="auth/logout.php">Salir</a>
-            <?php else: ?>
-                <a href="auth/login.php">Ingresar</a>
-            <?php endif; ?>
-        </nav>
-    </header>
-    <div class="contenedor">
-        <h2>Materiales Disponibles</h2>
-        <br>
-        <!-- Filtros por Material -->
-        <div class="filtros-bar">
-            <a href="tablero.php" class="<?= $filtroMat === 0 ? 'activo' : '' ?>">Todos</a>
-            <?php foreach ($categorias as $cat): ?>
-                <a href="tablero.php?material=<?= $cat['id_material'] ?>" 
-                   class="<?= $filtroMat === (int)$cat['id_material'] ? 'activo' : '' ?>">
-                   <?= e($cat['nombre']) ?>
-                </a>
-            <?php endforeach; ?>
-        </div>
 
-        <?php if (count($publicaciones) > 0): ?>
-            <div class="grid-publicaciones">
-                <?php foreach ($publicaciones as $pub): ?>
-                    <div class="pub-card">
-                        <div>
-                            <span class="badge"><?= e($pub['material']) ?></span>
-                            <h3 style="margin: 0.5rem 0; color: #2e7d32;"><?= e($pub['titulo']) ?></h3>
-                            <p><strong>Cantidad:</strong> <?= e($pub['cantidad']) ?></p>
-                            <p><strong>Dirección:</strong> <?= e($pub['direccion']) ?></p>
-                        </div>
-                        <div style="margin-top: 1rem;">
-                            <a href="detalle.php?id=<?= $pub['id_publicacion'] ?>" class="btn" style="width: 100%;">Ver Detalle y Contactar</a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+$tituloPagina = 'Tablero de Materiales';
+require_once __DIR__ . '/includes/header.php';
+?>
+
+<h2>Materiales Disponibles para Reciclaje</h2>
+<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Consulta los residuos registrados y contacta al generador.</p>
+
+<div class="filtros-bar">
+    <a href="tablero.php" class="<?= $filtroMat === 0 ? 'activo' : '' ?>">Todos los materiales</a>
+    <?php foreach ($categorias as $cat): ?>
+        <a href="tablero.php?material=<?= $cat['id_material'] ?>" 
+           class="<?= $filtroMat === (int)$cat['id_material'] ? 'activo' : '' ?>">
+           <?= e($cat['nombre']) ?>
+        </a>
+    <?php endforeach; ?>
+</div>
+
+<?php if (count($publicaciones) > 0): ?>
+    <div class="grid-publicaciones">
+        <?php foreach ($publicaciones as $pub): ?>
+            <div class="pub-card">
+                <div>
+                    <span class="badge"><?= e($pub['material']) ?></span>
+                    <h3 style="margin: 0.6rem 0; color: var(--primary);"><?= e($pub['titulo']) ?></h3>
+                    <p><strong>Cantidad:</strong> <?= e($pub['cantidad']) ?></p>
+                    <p><strong>Ubicación:</strong> <?= e($pub['direccion']) ?></p>
+                </div>
+                <div style="margin-top: 1.2rem;">
+                    <a href="detalle.php?id=<?= $pub['id_publicacion'] ?>" class="btn">Ver Detalles de Entrega</a>
+                </div>
             </div>
-        <?php else: ?>
-            <div class="card"><p>No hay publicaciones disponibles en esta categoría actualmente.</p></div>
-        <?php endif; ?>
+        <?php endforeach; ?>
     </div>
-</body>
-</html>
+<?php else: ?>
+    <div class="card"><p>No hay ofertas disponibles registradas en esta categoría.</p></div>
+<?php endif; ?>
+
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

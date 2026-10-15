@@ -1,35 +1,25 @@
 <?php
 declare(strict_types=1);
-session_start();
 require_once __DIR__ . '/funciones/funciones.php';
+
+$tituloPagina = 'Conectamos residuos con quien los transforma';
+require_once __DIR__ . '/includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>EcoConexión - Conectamos residuos con quien los transforma</title>
-    <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-    <header>
-        <h1><a href="index.php">EcoConexión</a></h1>
-        <nav>
-            <a href="tablero.php">Tablero</a>
-            <?php if (estaAutenticado()): ?>
-                <a href="publicar.php">Publicar</a>
-                <a href="mis_publicaciones.php">Mis Publicaciones</a>
-                <a href="auth/logout.php">Cerrar Sesión (<?= e($_SESSION['usuario_nombre']) ?>)</a>
-            <?php else: ?>
-                <a href="auth/login.php">Ingresar</a>
-                <a href="auth/registro.php">Registrarse</a>
-            <?php endif; ?>
-        </nav>
-    </header>
-    <div class="contenedor card" style="text-align: center; padding: 3rem 1.5rem;">
-        <h2 style="font-size: 2.2rem; color: #2e7d32;">Conectamos residuos con quien los transforma</h2>
-        <p style="margin: 1.2rem 0; font-size: 1.1rem;">Plataforma comunitaria para la gestión activa de materiales reciclables entre generadores y recicladores.</p>
-        <br>
-        <a href="tablero.php" class="btn" style="font-size: 1.1rem;">Explorar Materiales Disponibles</a>
-    </div>
-</body>
-</html>
+
+<div class="card" style="text-align: center; padding: 4rem 2rem;">
+    <h1 style="font-size: 2.4rem; color: var(--primary); margin-bottom: 1rem;">Conectamos residuos con quien los transforma</h1>
+    <p style="max-width: 600px; margin: 0 auto 2rem auto; color: var(--text-muted); font-size: 1.1rem;">
+        EcoConexión es la plataforma comunitaria que facilita la recolección selectiva de materiales reciclables entre generadores y recicladores.
+    </p>
+    
+    <?php if (estaAutenticado()): ?>
+        <a href="tablero.php" class="btn" style="max-width: 280px; margin: 0 auto;">Ir al Tablero de Materiales</a>
+    <?php else: ?>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="auth/login.php" class="btn" style="max-width: 200px;">Iniciar Sesión</a>
+            <a href="auth/registro.php" class="btn btn-secundario" style="max-width: 200px;">Registrarse</a>
+        </div>
+    <?php endif; ?>
+</div>
+
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

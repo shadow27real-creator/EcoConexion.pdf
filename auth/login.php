@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-session_start();
 require_once __DIR__ . '/../conexion/conexion.php';
 require_once __DIR__ . '/../funciones/funciones.php';
 
@@ -23,45 +22,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: ../tablero.php');
         exit();
     } else {
-        $error = 'Credenciales incorrectas. Verifique su correo y contraseña.';
+        $error = 'Las credenciales ingresadas son incorrectas.';
     }
 }
+
+$tituloPagina = 'Iniciar Sesión';
+require_once __DIR__ . '/../includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Iniciar Sesión - EcoConexión</title>
-    <link rel="stylesheet" href="../css/estilos.css">
-</head>
-<body>
-    <header>
-        <h1><a href="../index.php">EcoConexión</a></h1>
-    </header>
-    <div class="contenedor card" style="max-width: 450px;">
-        <h2>Iniciar Sesión</h2>
-        <br>
-        <?php if (isset($_SESSION['mensaje_exito'])): ?>
-            <div class="alerta alerta-exito"><?= e($_SESSION['mensaje_exito']) ?></div>
-            <?php unset($_SESSION['mensaje_exito']); ?>
-        <?php endif; ?>
 
-        <?php if ($error): ?>
-            <div class="alerta alerta-error"><?= e($error) ?></div>
-        <?php endif; ?>
+<div class="card card-center">
+    <h2>Iniciar Sesión</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Ingresa a tu cuenta de EcoConexión</p>
 
-        <form action="login.php" method="POST">
-            <div class="campo">
-                <label>Correo Electrónico:</label>
-                <input type="email" name="email" required>
-            </div>
-            <div class="campo">
-                <label>Contraseña:</label>
-                <input type="password" name="password" required>
-            </div>
-            <button type="submit" class="btn" style="width: 100%;">Ingresar</button>
-        </form>
-        <p style="margin-top: 1rem; text-align: center;">¿No tienes cuenta? <a href="registro.php">Regístrate aquí</a></p>
-    </div>
-</body>
-</html>
+    <?php if (isset($_SESSION['mensaje_exito'])): ?>
+        <div class="alerta alerta-exito"><?= e($_SESSION['mensaje_exito']) ?></div>
+        <?php unset($_SESSION['mensaje_exito']); ?>
+    <?php endif; ?>
+
+    <?php if ($error): ?>
+        <div class="alerta alerta-error"><?= e($error) ?></div>
+    <?php endif; ?>
+
+    <form action="login.php" method="POST">
+        <div class="campo">
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="campo">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn">Ingresar al Sistema</button>
+    </form>
+    <p style="margin-top: 1.5rem; text-align: center; font-size: 0.9rem;">
+        ¿No tienes cuenta? <a href="registro.php" style="color: var(--primary); font-weight: 600;">Regístrate aquí</a>
+    </p>
+</div>
+
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
