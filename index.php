@@ -3,6 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/funciones/funciones.php';
 
 $tituloPagina = 'Conectamos residuos con quien los transforma';
+$clasePagina = 'app-bg';
 require_once __DIR__ . '/includes/header.php';
 ?>
 

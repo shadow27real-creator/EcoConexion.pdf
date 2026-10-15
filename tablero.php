@@ -30,6 +30,7 @@ if ($filtroMat > 0) {
 }
 
 $tituloPagina = 'Tablero de Materiales';
+$clasePagina = 'app-bg';
 require_once __DIR__ . '/includes/header.php';
 ?>
 

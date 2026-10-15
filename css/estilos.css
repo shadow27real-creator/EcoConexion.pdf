@@ -14,11 +14,11 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
 
-.main-header { background: var(--primary); color: white; padding: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.main-header { background: var(--primary); color: white; padding: 0.8rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .header-container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
 
-.logo { color: white; text-decoration: none; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
-.logo-img { height: 32px; width: auto; object-fit: contain; }
+.logo { color: white; text-decoration: none; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+.logo-img { height: 38px; width: auto; object-fit: contain; }
 
 .main-nav { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
 .main-nav a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; transition: color 0.2s; }
@@ -27,20 +27,24 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxyge
 
 .main-content { flex: 1; max-width: 1100px; width: 100%; margin: 2rem auto; padding: 0 1.5rem; }
 
-/* Fondo personalizado para Login y Registro con fondo_pagina.png */
-.main-content.auth-page {
-    background-image: linear-gradient(rgba(248, 249, 250, 0.85), rgba(248, 249, 250, 0.85)), url('../img/fondo_pagina.png');
+/* Fondo sutil tipo marca de agua para Login, Registro, Index y Tablero */
+.main-content.app-bg {
+    background-image: linear-gradient(rgba(248, 249, 250, 0.92), rgba(248, 249, 250, 0.92)), url('../img/fondo_pagina.png');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: cover;
-    min-height: calc(100vh - 160px);
+    background-size: 450px auto;
+    border-radius: 8px;
+}
+
+.main-content.auth-page {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: calc(100vh - 160px);
 }
 
 .auth-page .card-center {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -66,7 +70,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxyge
 
 .campo { margin-bottom: 1.2rem; }
 .campo label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
-.campo input, .campo select, .campo textarea { width: 100%; padding: 0.65rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; }
+.campo input, .campo select, .campo textarea { width: 100%; padding: 0.65rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; background: white; }
 .campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--accent); }
 
 .alerta { padding: 0.8rem 1rem; border-radius: 6px; margin-bottom: 1.2rem; font-size: 0.9rem; font-weight: 500; }

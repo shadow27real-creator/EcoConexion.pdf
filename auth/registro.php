@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $tituloPagina = 'Registro de Usuario';
-$clasePagina = 'auth-page';
+$clasePagina = 'app-bg auth-page';
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
