@@ -12,13 +12,22 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+    background-color: var(--bg); 
+    color: var(--text); 
+    line-height: 1.6; 
+    display: flex; 
+    flex-direction: column; 
+    min-height: 100vh; 
+}
 
 .main-header { background: var(--primary); color: white; padding: 0.6rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.12); position: sticky; top: 0; z-index: 100; }
 .header-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
 
+/* Control del Logo */
 .logo { color: white; text-decoration: none; font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 0.6rem; }
-.logo-img { height: 32px !important; max-height: 32px !important; width: auto !important; object-fit: contain; }
+.logo-img { height: 34px !important; max-height: 34px !important; width: auto !important; object-fit: contain; }
 
 .main-nav { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .main-nav a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; padding: 0.4rem 0.8rem; border-radius: 6px; }
@@ -34,12 +43,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxyge
 
 .main-content { flex: 1; max-width: 1200px; width: 100%; margin: 2rem auto; padding: 0 1.5rem; }
 
+/* FONDO AJUSTADO: Opacidad equilibrada y cobertura completa */
 .main-content.app-bg {
-    background-image: linear-gradient(rgba(244, 246, 248, 0.94), rgba(244, 246, 248, 0.94)), url('/EcoConexion/img/fondo_pagina.png') !important;
+    background-image: linear-gradient(rgba(244, 246, 248, 0.88), rgba(244, 246, 248, 0.88)), url('/EcoConexion/img/fondo_pagina.png') !important;
     background-repeat: no-repeat !important;
-    background-position: center !important;
-    background-size: 380px auto !important;
-    border-radius: 8px;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    border-radius: 12px;
 }
 
 .main-content.auth-page {
@@ -83,6 +94,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxyge
 .alerta-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
 .main-footer { background: #0f172a; color: #94a3b8; padding: 2.5rem 0; font-size: 0.88rem; margin-top: auto; }
-.footer-container { max-width: 2000px; margin: 0 auto; padding: 0 1.5rem; text-align: center; }
+.footer-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; text-align: center; }
 .footer-container p { margin-bottom: 0.5rem; }
 .integrantes { color: #64748b; font-size: 0.82rem; margin-top: 0.8rem; }

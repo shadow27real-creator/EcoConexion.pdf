@@ -15,8 +15,14 @@ $filtroTexto = trim($_GET['q'] ?? '');
 $resMat = $mysqli->query('SELECT id_material, nombre FROM materiales ORDER BY nombre ASC');
 $categorias = $resMat->fetch_all(MYSQLI_ASSOC);
 
-$resCiudades = $mysqli->query('SELECT DISTINCT ciudad FROM publicaciones WHERE ciudad IS NOT NULL AND ciudad != "" ORDER BY ciudad ASC');
-$ciudades = $resCiudades->fetch_all(MYSQLI_ASSOC);
+// Ciudades sugeridas por defecto + registradas en la BD
+$ciudadesPrincipales = ['Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena'];
+$resCiudadesBD = $mysqli->query('SELECT DISTINCT ciudad FROM publicaciones WHERE ciudad IS NOT NULL AND ciudad != "" ORDER BY ciudad ASC');
+$ciudadesBD = array_column($resCiudadesBD->fetch_all(MYSQLI_ASSOC), 'ciudad');
+
+// Unir sin duplicados para la lista autocompletada
+$todasLasCiudades = array_unique(array_merge($ciudadesPrincipales, $ciudadesBD));
+sort($todasLasCiudades);
 
 $sql = 'SELECT p.id_publicacion, p.titulo, p.cantidad, p.direccion, p.barrio, p.ciudad, p.estado, p.fecha_publicacion, m.nombre AS material
         FROM publicaciones p
@@ -32,8 +38,8 @@ if ($filtroMat > 0) {
     $types .= 'i';
 }
 if (!empty($filtroCiudad)) {
-    $sql .= ' AND p.ciudad = ?';
-    $params[] = $filtroCiudad;
+    $sql .= ' AND p.ciudad LIKE ?';
+    $params[] = '%' . $filtroCiudad . '%';
     $types .= 's';
 }
 if (!empty($filtroTexto)) {
@@ -62,10 +68,10 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <h2 style="color: var(--primary); font-weight: 800; margin-bottom: 0.3rem;">Tablero de Materiales Reciclables</h2>
-<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Filtra rápidamente por categoría, ciudad o barrio.</p>
+<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Filtra por categoría o busca cualquier ciudad y barrio de Colombia.</p>
 
 <div class="filter-dashboard">
-    <div class="filter-dashboard-header">🔍 Categorías de Material:</div>
+    <div class="filter-dashboard-header">🔍 Categoría de Material:</div>
 
     <div class="chips-container">
         <a href="tablero.php?material=0&ciudad=<?= urlencode($filtroCiudad) ?>&q=<?= urlencode($filtroTexto) ?>" 
@@ -80,19 +86,18 @@ require_once __DIR__ . '/includes/header.php';
         <?php endforeach; ?>
     </div>
 
+    <!-- Buscador con autocompletado para Ciudades -->
     <form action="tablero.php" method="GET" class="filter-inputs-grid">
         <input type="hidden" name="material" value="<?= $filtroMat ?>">
         
         <div class="campo">
-            <label for="ciudad">Filtrar por Ciudad:</label>
-            <select id="ciudad" name="ciudad">
-                <option value="">Todas las Ciudades</option>
-                <?php foreach ($ciudades as $c): ?>
-                    <option value="<?= e($c['ciudad']) ?>" <?= $filtroCiudad === $c['ciudad'] ? 'selected' : '' ?>>
-                        <?= e($c['ciudad']) ?>
-                    </option>
+            <label for="ciudad">Buscar Ciudad:</label>
+            <input type="text" id="ciudad" name="ciudad" list="ciudades-list" value="<?= e($filtroCiudad) ?>" placeholder="Escribe o selecciona tu ciudad (Ej: Bogotá, Tunja...)">
+            <datalist id="ciudades-list">
+                <?php foreach ($todasLasCiudades as $c): ?>
+                    <option value="<?= e($c) ?>"></option>
                 <?php endforeach; ?>
-            </select>
+            </datalist>
         </div>
 
         <div class="campo">
@@ -127,8 +132,8 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 <?php else: ?>
     <div class="card" style="text-align: center; padding: 3rem 1rem;">
-        <p style="font-size: 1.1rem; color: var(--text-muted);">No se encontraron ofertas con los filtros ingresados.</p>
-        <a href="tablero.php" style="color: var(--primary); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Limpiar filtros de búsqueda</a>
+        <p style="font-size: 1.1rem; color: var(--text-muted);">No se encontraron ofertas con los criterios seleccionados.</p>
+        <a href="tablero.php" style="color: var(--primary); font-weight: 700; margin-top: 0.5rem; display: inline-block;">Ver todas las ofertas</a>
     </div>
 <?php endif; ?>
 
